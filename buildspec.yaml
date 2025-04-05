@@ -20,14 +20,13 @@ phases:
       - echo Building the Docker image...
       - docker build -t $REPOSITORY_URI:$IMAGE_TAG .
 
-post_build:
-  commands:
-    - echo Build completed on `date`
-    - echo Pushing the Docker image to ECR...
-    - docker push $REPOSITORY_URI:$IMAGE_TAG
-    - echo "Image Tag is $IMAGE_TAG"
-    - echo Writing image definitions file...
-    - printf '[{"name":"khanam-ecs-app","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker image to ECR...
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - echo Writing image definitions file...
+      - printf '[{"name":"khanam-ecs-app","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
 
 artifacts:
   files:
