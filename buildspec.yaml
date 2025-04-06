@@ -1,10 +1,10 @@
 version: 0.2
-
+ 
 env:
   variables:
     AWS_DEFAULT_REGION: "ca-central-1"
-    REPOSITORY_URI: "445567079138.dkr.ecr.ca-central-1.amazonaws.com/khanam-ecs-app"
-
+    REPOSITORY_URI: "474668427249.dkr.ecr.ca-central-1.amazonaws.com/khanam-ecr"
+ 
 phases:
   pre_build:
     commands:
@@ -13,21 +13,27 @@ phases:
       - echo Logging into $REPOSITORY_URI
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $REPOSITORY_URI
       - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
-
+ 
   build:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
       - docker build -t $REPOSITORY_URI:$IMAGE_TAG .
-
+ 
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image to ECR...
       - docker push $REPOSITORY_URI:$IMAGE_TAG
-      - echo Writing image definitions file...
-      - printf '[{"name":"khanam-ecs-app","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
-
+      - echo "Creating imagedefinitions.json..."
+      - |
+        echo '[ 
+          { 
+            "name": "khanam-ecr", 
+            "imageUri": "'$REPOSITORY_URI:$IMAGE_TAG'" 
+          } 
+        ]' > imagedefinitions.json
+ 
 artifacts:
   files:
     - imagedefinitions.json
