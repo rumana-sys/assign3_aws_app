@@ -3,7 +3,7 @@ version: 0.2
 env:
   variables:
     AWS_DEFAULT_REGION: "ca-central-1"
-    REPOSITORY_URI: "474668427249.dkr.ecr.ca-central-1.amazonaws.com/khanam-ecr"
+    REPOSITORY_URI: "public.ecr.aws/o9m5f3k6/khanam-ecr"
  
 phases:
   pre_build:
